@@ -4,6 +4,7 @@ import kr.co.fastcampus.eatgo.application.RestaurantService;
 import kr.co.fastcampus.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
 import kr.co.fastcampus.eatgo.domain.RestaurantNotFoundException;
+import kr.co.fastcampus.eatgo.domain.Review;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class RestaurantControllerTest {
 
     @Test
     public void detailWithExisted() throws Exception {
-        Restaurant restaurant1 = Restaurant.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
                 .name("Joker house")
                 .address("Seoul")
@@ -68,16 +69,17 @@ public class RestaurantControllerTest {
                 .name("KimChi")
                 .build();
 
-        restaurant1.setMenuItems( Arrays.asList(menuItem));
+        restaurant.setMenuItems( Arrays.asList(menuItem));
 
-        Restaurant restaurant2 = Restaurant.builder()
-                .id(2020L)
-                .name("Cyber Food")
-                .address("Seoul")
+        Review review = Review.builder()
+                .name("Joker")
+                .score(4)
+                .description("JoSoSo")
                 .build();
 
-        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
-        given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
+        restaurant.setReviews(Arrays.asList(review));
+
+        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
 
         mvc.perform( get( "/restaurants/1004"))
                 .andExpect(status().isOk())
@@ -89,17 +91,13 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("KimChi")
-                ));
-
-        mvc.perform( get( "/restaurants/2020"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"id\":2020")
                 ))
                 .andExpect(content().string(
-                        containsString("\"name\":\"Cyber Food\"")
-                )) ;
+                        containsString("JoSoSo")
+                ))
+        ;
     }
+
     @Test
     public void detailWithNotExisted() throws Exception {
         given(restaurantService.getRestaurant(404L)).willThrow( new RestaurantNotFoundException(404L));
@@ -144,7 +142,7 @@ public class RestaurantControllerTest {
         mvc.perform(post("/restaurants")
                 .contentType( MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"\",\"address\":\"\"}"))
-                .andExpect(status().isBadRequest()) ; //TODO validation 처리 안되는 원인 확인 필요.isCreated()); //
+                .andExpect(status().isBadRequest()) ;
 
     }
 
@@ -163,7 +161,7 @@ public class RestaurantControllerTest {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"\",\"address\":\"\" }"))
-                .andExpect(status().isBadRequest());  //TODO validation 처리 안되는 원인 확인 필요 .isOk()); //
+                .andExpect(status().isBadRequest());
 
     }
 
@@ -172,6 +170,6 @@ public class RestaurantControllerTest {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"Joker Bar\",\"address\":\"\" }"))
-                .andExpect(status().isBadRequest());  //TODO validation 처리 안되는 원인 확인 필요.isOk()); //
+                .andExpect(status().isBadRequest());
     }
 }
