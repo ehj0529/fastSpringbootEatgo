@@ -1,14 +1,13 @@
 package kr.co.fastcampus.eatgo.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,40 +20,27 @@ public class Restaurant {
 
     @Id
     @GeneratedValue
+    @Setter
     private Long id;
+
+    @NotEmpty
+    @org.hibernate.validator.constraints.NotEmpty
     private String name;
+
+    @NotEmpty
+    @org.hibernate.validator.constraints.NotEmpty
     private String address;
 
     @Transient
-    private List<MenuItem> menuItems = new ArrayList<MenuItem>() ;
-
-    public Restaurant( String name, String address ) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public Restaurant( Long id, String name , String address ) {
-        this.id =id;
-        this.name =name;
-        this.address =address;
-    }
-
-    //public void setId( long id ) {
-    //    this.id = id;
-    //}
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<MenuItem> menuItems  ;
 
     public String getInfomation() {
         return name +" in " + address ;
     }
 
-    public void addMenuItem( MenuItem menuItem ) {
-        menuItems.add(menuItem);
-    }
-
     public void setMenuItems( List<MenuItem> menuItems ) {
-        for(MenuItem menuItem: menuItems){
-            addMenuItem(menuItem);
-        }
+        this.menuItems = new ArrayList<>(menuItems);
     }
 
     public void updateInfomation( String name, String address ) {
