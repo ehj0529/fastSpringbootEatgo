@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +22,11 @@ public class Restaurant {
     @Setter
     private Long id;
 
-    @NotEmpty
+    //@NotEmpty
     @org.hibernate.validator.constraints.NotEmpty
     private String name;
 
-    @NotEmpty
+   //@NotEmpty
     @org.hibernate.validator.constraints.NotEmpty
     private String address;
 
