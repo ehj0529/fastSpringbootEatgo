@@ -1,10 +1,8 @@
 package kr.co.fastcampus.eatgo.interfaces;
 
 import kr.co.fastcampus.eatgo.application.RestaurantService;
-import kr.co.fastcampus.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
 import kr.co.fastcampus.eatgo.domain.RestaurantNotFoundException;
-import kr.co.fastcampus.eatgo.domain.Review;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
@@ -65,20 +62,6 @@ public class RestaurantControllerTest {
                 .address("Seoul")
                 .build();
 
-        MenuItem menuItem =MenuItem.builder()
-                .name("KimChi")
-                .build();
-
-        restaurant.setMenuItems( Arrays.asList(menuItem));
-
-        Review review = Review.builder()
-                .name("Joker")
-                .score(4)
-                .description("JoSoSo")
-                .build();
-
-        restaurant.setReviews(Arrays.asList(review));
-
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
 
         mvc.perform( get( "/restaurants/1004"))
@@ -88,12 +71,6 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Joker house\"")
-                ))
-                .andExpect(content().string(
-                        containsString("KimChi")
-                ))
-                .andExpect(content().string(
-                        containsString("JoSoSo")
                 ))
         ;
     }
