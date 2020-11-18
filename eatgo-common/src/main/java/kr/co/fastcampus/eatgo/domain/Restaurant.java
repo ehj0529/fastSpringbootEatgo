@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class Restaurant {
     @GeneratedValue
     @Setter
     private Long id;
+
+    @NotNull
+    private Long categoryId;
 
     //@NotEmpty
     @org.hibernate.validator.constraints.NotEmpty
