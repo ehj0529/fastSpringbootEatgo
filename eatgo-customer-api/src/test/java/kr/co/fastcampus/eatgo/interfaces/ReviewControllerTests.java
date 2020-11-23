@@ -2,7 +2,6 @@ package kr.co.fastcampus.eatgo.interfaces;
 
 import kr.co.fastcampus.eatgo.application.ReviewService;
 import kr.co.fastcampus.eatgo.domain.Review;
-import kr.co.fastcampus.eatgo.interfaces.ReviewController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +49,8 @@ public class ReviewControllerTests {
 
         verify(reviewService).addReview(eq(1L),any());
     }
-    @Test
 
+    @Test
     public void createWithInvalidAttribute() throws Exception {
         mvc.perform(post("/restaurants/1/reviews")
                 .contentType(MediaType.APPLICATION_JSON)
