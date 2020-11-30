@@ -22,8 +22,6 @@ public class Review {
     @Setter
     private Long restaurantId;
 
-    @NotEmpty
-    @org.hibernate.validator.constraints.NotEmpty
     private String name;
 
     @NotNull

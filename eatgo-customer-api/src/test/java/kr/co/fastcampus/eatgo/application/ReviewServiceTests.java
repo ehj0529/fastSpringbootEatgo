@@ -1,6 +1,5 @@
 package kr.co.fastcampus.eatgo.application;
 
-import kr.co.fastcampus.eatgo.application.ReviewService;
 import kr.co.fastcampus.eatgo.domain.Review;
 import kr.co.fastcampus.eatgo.domain.ReviewRepository;
 import org.junit.Before;
@@ -32,7 +31,7 @@ public class ReviewServiceTests {
                         .score(3)
                         .description("Mat-it-da")
                         .build();
-        reviewService.addReview(1004L,review);
+        reviewService.addReview(1004L,"JOKER", 3,"Mat-it-da" );
 
         verify(reviewRepository).save(any());
 
