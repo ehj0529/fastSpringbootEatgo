@@ -31,7 +31,9 @@ public class SessionController {
         User user =userService.authenticate(email, password);
 
         //String accessToken =user.getAccessToken(); //아래 작성 하는 부분은 건너뛴거 같음.
-        String accessToken = jwtUtil.createToken(user.getId(), user.getName());
+        String accessToken = jwtUtil.createToken( user.getId()
+                                                , user.getName()
+                                                , user.isRestaurantOwner() ? user.getRestaurantId() : null);
 
         String url ="/session";
 

@@ -21,3 +21,6 @@ These additional references should also help you:
 
 * [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
 
+JWT 처리내역 확인 가능 사이트
+* https://jwt.io/    
+
