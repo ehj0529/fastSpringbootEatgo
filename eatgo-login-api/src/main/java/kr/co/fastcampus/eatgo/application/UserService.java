@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,23 +22,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser( String email, String name, String password ) {
+    public User authenticate( String email, String password ) {
+       User user = userRepository.findByEmail(email) //찾는 이메일이 없는 경우 Exception 처리
+               .orElseThrow(()->new EmailNotExistedException(email));
 
-        Optional<User> existed = userRepository.findByEmail(email);
-
-        if(existed.isPresent()){
-            throw new EmailExistedException(email);
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new PasswordWrongException();
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
-
-        User user = User.builder()
-                        .email(email)
-                        .name(name)
-                        .password(encodedPassword)
-                        .level(1L)
-                        .build();
-        return userRepository.save(user);
-
+        return user;
     }
 }

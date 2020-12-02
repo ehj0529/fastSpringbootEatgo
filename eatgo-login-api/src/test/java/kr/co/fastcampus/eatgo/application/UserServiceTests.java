@@ -1,0 +1,76 @@
+package kr.co.fastcampus.eatgo.application;
+
+import kr.co.fastcampus.eatgo.domain.User;
+import kr.co.fastcampus.eatgo.domain.UserRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
+public class UserServiceTests {
+
+    private UserService userService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Before
+    public void setUp(){
+
+        MockitoAnnotations.initMocks(this);
+        userService = new UserService(userRepository,passwordEncoder);
+    }
+
+    @Test
+    public void authenticateWithValidAttributes(){
+
+        String email ="tester@example.com";
+        String password ="test";
+
+        User mockUser = User.builder().email(email).build();
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
+        given(passwordEncoder.matches(any(),any())).willReturn(true); //패스워드 암호화 부분을 테스트 영역에 주입시키는 부분 일치상태로 주입.
+
+        User user = userService.authenticate(email, password);
+        assertThat(user.getEmail(), is(email));
+    }
+
+    @Test(expected = EmailNotExistedException.class)
+    public void authenticateWithNotExistedEmail(){
+
+        String email ="x@example.com";
+        String password ="test";
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+        userService.authenticate(email, password);
+
+    }
+
+    @Test(expected = PasswordWrongException.class)
+    public void authenticateWithNotWrongPassword(){
+
+        String email ="tester@example.com";
+        String password ="x";
+
+        User mockUser = User.builder().email(email).password(password).build();
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
+        given(passwordEncoder.matches(any(),any())).willReturn(false); //패스워드 암호화 부분을 테스트 영역에 주입시키는 부분 불일치상태 주입
+
+        userService.authenticate(email, password);
+
+    }
+
+}
